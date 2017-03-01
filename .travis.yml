@@ -13,7 +13,7 @@ script:
   - ./prepare.sh
   - export REPO=jankoppe/arch-ci
   - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH ; fi`
-  - export VERSION=$(shell cat VERSION)
+  - export VERSION=$(cat VERSION)
   - docker build -f Dockerfile -t $REPO:$TRAVIS_COMMIT .
 
 after_success:
