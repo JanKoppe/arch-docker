@@ -1,0 +1,22 @@
+env:
+  global:
+  - secure: jk0gryYYTLlDp02C4RKuS83QYSVtVk8gE95Q+C7ieLLBjJypQYSlNITtqwfeXozXPXgKbWAjLJ9tdqAFauFHCLSeNya1dPe3cOud9jyWpZ76HpweLsXXxSJm9GV0TCW0K75mus1kSdWTbmtx1nIlzldO1BfmxUZivqWA+ikd0YPzW0fDcAVo0XpSg9asAGornahplsAabua/SjO47BTK2d70VILaUs+OTau9E/8AQQuHA8vlhzp68CIToTwb87PDSirMwstwHADUcHcwGiMf8sN4A1qqACUPrtCdKNF30i2UBGjUQI42ufmmnrTfWr096GTvmxDiw6fiE0pYe8r84Ag1V3BlQvUpLNvM1gJgXVuwXW+aLgXTo9St5WTsuPI89OSvpv96e1HhO94NYH34cwSmfUM90vqa5+H5uvKRkecfk/CP9tKoFUQfw2xPIMIiU/wVljRoroME+PTTpaKfqb1NpQobsdLzqOqESlGS2AjP3EqmeeDgtOrxwHzwli3rI0/Uz9PwlwM6y8wk1VXfvi8JshKQNKUZCrbHQEQHVLugpfsQ9z0QSau9KZBdKNzSXgl9p/XX+DB3FQkLaBPYYFBUJHmXZ0NiZEd+j11gLsahauTIMbTl0E4/bQOkkQzbTqhUHw+wVJF+x2/WgguXurgRNhKtb6Z77vPxsGMGJMk=
+  - secure: n/djvgMT+TVkIcZRRSoIdUs4Y+FOvAFVJPE3gNpdq0cpZDlMNjnLC+cJ0bW19c80wUvvddc4+AyzGCBaTM09J4vpKi/J23bUtZy17W3+Vt5lK1/d0l3Ni4nORbOnk1rYfKgXXG/DwLy0XZx4NjFwtYbvKc6nhegM4zNQpyJeSX6opWMgIUntoYgzF/lGlHfE7F7418/2yDLZ9xanJSdTaYnmABTu75u23Fj0pOJgzmVKArRu9LWLOKelxI26qtZ/agc/wLqGr449jOGzeEvhvXgeMz1pTBzIIcWPg+blbHcMN/JQJcNycKx7N5sY5NUujt3DwwWCtxqk+FUgwffHAXQTAVQIHg1Pm/Wurpz5p4BDH3aA1+jEsIta7AeDpCVne+gCx7RvNqc1QrNuWeFKqwqZrmget0FLDxfGC4Z3z4zYxcRx6TM509KMK0MdSECViqyfCH4BvzrlYxL7f/SvQ2U1OCgOHKZbzWC9AMBhtZxJ58W5jpjFViB+JwGCMO8wyS9iELEOM7avh85BtRbgtKVJhi0eCeFsqpeHkEtWQ4lRakBVIewNoCMxKsTp4kkYeJeIsUrRVEgWK+Qgn3SdofqdoCc7VudfRrlG0QTKNxAv7bTSkouBAeVTypuEPWYL+NOyIMStCPANBkXDM2UX9NbfZ+s9Y3J0qktRwHk14TE=
+  - secure: DqbcCMl/1huzitZuglw/AO0MM6UaKRaF1bnyZwk3d6efOBdYlzsQPdGndyfP4pyUViD/W1keJVcjSoxuEMN2YAixOCoap/Dvdk1S9QV6XdCHuUWZWk0TfyMFxDaO4GCkZrFRirR/OB2leewZ4tY3iL+7jom1FOZuyyraFZ0iVDY+55PzFvuQ9bHRWW3xZ1yeffs3a5mwwYmXuqRZf0HpPIzsmyCcYBJjKz930JOOOa8Tsj939jjq+dXt37UtHhPBojLSzeOhXosVC6LcwO94GYTioFJax1QXqdsM/oiqM1L0/t+CbpSg8hVYWX58Lf7gmX9XFJAymM4QdvyJ+BPq3Y3Tzk7/GRY/HSmlGvG4CdMpv4IqhyCdEqdnAog+US9Dx/nPF+QJbJ59mKgEadn6SQD8+u7h3utIOjFintOW8t3awWPM75CLi7c/VAP4Z8hg7g8A9g4BhNORlMJ86aXkxAV8BSoKZPNhoi5k9WuiHWN9UjdZSQuINmfAXWojZPf+NkwXlEkWmwKHKZh2JAUGVXV58O31bypfalBuCk1nRcJHk3xQtHZ25uE3U9p+LUKStO3s6itufJ5gatL+MyEwNDzArCCzpPO1+h5LVDX9v/pZKYZ+eJhS2U9hYyXTSoe+f9YRg3/pJHyJaapJBZmqKMhb0k1C/8/ERh5hyQ7Sx3A=
+
+sudo: required
+
+services:
+  - docker
+
+script:
+  - prepare.sh
+
+after_success:
+  - docker login -e $DOCKER_MAIL -u $DOCKER_USER -p $DOCKER_PASS
+  - export REPO=jankoppe/arch-ci
+  - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH ; fi`
+  - docker build -f Dockerfile -t $REPO:$COMMIT .
+  - docker tag $REPO:$COMMIT $REPO:$TAG
+  - docker tag $REPO:$COMMIT $REPO:travis-$TRAVIS_BUILD_NUMBER
+  - docker push $REPO
