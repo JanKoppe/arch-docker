@@ -11,14 +11,14 @@ services:
 
 script:
   - ./prepare.sh
-  - export REPO=jankoppe/arch-ci
+  - export REPO=jankoppe/arch
   - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH ; fi`
   - export VERSION=$(cat VERSION)
   - docker build -f Dockerfile -t $REPO:$TRAVIS_COMMIT .
 
 after_success:
   - docker login -e $DOCKER_MAIL -u $DOCKER_USER -p $DOCKER_PASS
-  - docker tag $REPO:$TRAVIS_COMMIT $REPO:$TAG
   - docker tag $REPO:$TRAVIS_COMMIT $REPO:$VERSION
-  - docker push $REPO:$TAG
+  - docker tag $REPO:$TRAVIS_COMMIT $REPO:$TAG
   - docker push $REPO:$VERSION
+  - docker push $REPO:$TAG
