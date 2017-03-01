@@ -6,7 +6,7 @@
 [![](https://images.microbadger.com/badges/image/jankoppe/arch.svg)](https://microbadger.com/images/jankoppe/arch "Get your own image badge on microbadger.com")
 [![](https://images.microbadger.com/badges/version/jankoppe/arch.svg)](https://microbadger.com/images/jankoppe/arch "Get your own version badge on microbadger.com")
 
-This repository contains a Dockerfile and associated scripts to create a Arch Linux base image from scratch. The builds are automatically done and published to [Docker Hub](https://hub.docker.com/jankoppe/arch) via Travis CI.
+This repository contains a Dockerfile and associated scripts to create a Arch Linux base image from scratch. The builds are automatically done and published to [Docker Hub](https://hub.docker.com/r/jankoppe/arch) via Travis CI.
 
 ## Build locally
 
